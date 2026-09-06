@@ -1,0 +1,13 @@
+# Entornos virtuales
+venv/
+brain/venv/
+
+# Archivos de caché de Python
+__pycache__/
+*.pyc
+
+# Configuración local de VS Code (opcional, algunos prefieren subirla)
+.vscode/
+
+# Variables de entorno / secretos (los vamos a necesitar pronto, para el correo)
+.env
