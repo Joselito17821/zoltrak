@@ -47,7 +47,7 @@ zoltrak/
 ## Ruta de desarrollo (fases)
 
 - [x] **Fase 0** — Preparar el terreno: verificar Python/Java/PostgreSQL, instalar Ollama y bajar el modelo, crear estructura de carpetas, entorno virtual.
-- [~] **Fase 1** — El cerebro entiende lenguaje natural (Python + Ollama): script de consola que conversa con personalidad básica. *(conexión con Ollama funcionando; falta definir personalidad completa vía rol `system`)*
+- [x] **Fase 1** — El cerebro entiende lenguaje natural (Python + Ollama): script de consola que conversa con personalidad básica. *(conexión con Ollama funcionando; falta definir personalidad completa vía rol `system`)*
 - [ ] **Fase 1.5** — Acciones sobre el sistema: abrir apps/carpetas/páginas web según la intención detectada.
 - [ ] **Fase 2** — Memoria persistente (Python + PostgreSQL): diseño de tablas, historial y progreso guardado entre sesiones.
 - [ ] **Fase 2.5** — Leer correo (Gmail/Outlook): resumen de mensajes nuevos.
@@ -64,4 +64,4 @@ zoltrak/
 
 ## Estado actual
 
-Repositorio creado y publicado en GitHub (privado). `main.py` inicial conecta correctamente con Ollama (`llama3.2:3b`) y responde por consola. Pendiente: agregar personalidad vía mensaje `system`, luego continuar con Fase 1.5.
+main.py tiene la personalidad de Zoltrak definida (bloques [ROL], [RASGOS], [TONO Y ESTILO], [RESTRICCIONES], con toque Frieren), bucle de conversación con memoria de sesión completa, y salida por palabras clave. Modelo activo: llama3.2:3b (se probó llama3.1:8b, mejor calidad pero el doble de lento — se descartó por la futura voz). Fase 1 completa.
