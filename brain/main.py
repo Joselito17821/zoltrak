@@ -1,4 +1,5 @@
 import ollama
+import os
 
 historial=[
 
@@ -27,9 +28,20 @@ historial=[
             - Evita la jerga técnica o explicaciones largas, salvo que el usuario la pida explícitamente.
         '''}, 
     ]
+apps = {
+        "spotify": "C:\\Users\\Jose Manuel\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Spotify.lnk",
+        "chrome": r"C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Google Chrome.lnk",
+        }
 
 while True:
     input_text = input("Usuario: ")
+
+    palabras_claves_para_ejecutar = ["ejecutar", "haz esto", "haz aquello", "realiza esto", "realiza aquello", "abre"]
+    if any(palabra in input_text.lower() for palabra in palabras_claves_para_ejecutar):
+        for app in apps:
+            if app in input_text.lower():
+                os.startfile(apps[app])
+                break
 
     clave_para_salir = ["salir", "adios", "chao", "bye"]
     if input_text.lower() in clave_para_salir:
