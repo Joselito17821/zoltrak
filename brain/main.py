@@ -29,7 +29,7 @@ historial=[
         '''}, 
     ]
 apps = {
-        "spotify": "C:\\Users\\Jose Manuel\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Spotify.lnk",
+        "spotify":r"C:\Users\Jose Manuel\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Spotify.lnk",
         "chrome": r"C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Google Chrome.lnk",
         }
 
@@ -40,21 +40,32 @@ while True:
     if any(palabra in input_text.lower() for palabra in palabras_claves_para_ejecutar):
         for app in apps:
             if app in input_text.lower():
-                os.startfile(apps[app])
+                try:
+                    os.startfile(apps[app])
+                    print("Zoltrak: Allí va tu camino.")
+                except FileNotFoundError:
+                    print("Zoltrak: No logro encontrar ese camino. Quizás se ha perdido con el tiempo.")
                 break
+        else:
+            print("Zoltrak: No reconozco ese camino.")
+        continue    
 
-    clave_para_salir = ["salir", "adios", "chao", "bye"]
-    if input_text.lower() in clave_para_salir:
+    clave_para_salir = ["salir", "adios", "chao", "bye", "hasta luego", "nos vemos", "adiós"]
+    if input_text.lower().strip() in clave_para_salir:
         print("Zoltrak: Que tu camino sea tranquilo.")
         break
 
     historial.append({'role': 'user', 'content': input_text})
 
-    respuesta = ollama.chat(
+    try:
+        respuesta = ollama.chat(
         model='llama3.2:3b',
         messages=historial
     )
-    print(respuesta['message']['content'])
+    except ConnectionError:
+        print("Zoltrak: Estoy durmiendo, intenta más tarde.")
+        continue
+
+    print("Zoltrak: " + respuesta['message']['content'])
 
     historial.append(respuesta['message'])
-    
