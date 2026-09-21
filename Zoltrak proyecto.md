@@ -47,7 +47,7 @@ zoltrak/
 ## Ruta de desarrollo (fases)
 
 - [x] **Fase 0** — Preparar el terreno: verificar Python/Java/PostgreSQL, instalar Ollama y bajar el modelo, crear estructura de carpetas, entorno virtual.
-- [x] **Fase 1** — El cerebro entiende lenguaje natural (Python + Ollama): script de consola que conversa con personalidad básica. *(conexión con Ollama funcionando; falta definir personalidad completa vía rol `system`)*
+- [x] **Fase 1** — El cerebro entiende lenguaje natural (Python + Ollama): script de consola que conversa con personalidad básica. *(conexión con Ollama funcionando; personalidad definida vía rol `system`)*
 - [~] **Fase 1.5** — Acciones sobre el sistema: abrir apps/carpetas/páginas web según la intención detectada.
 - [ ] **Fase 2** — Memoria persistente (Python + PostgreSQL): diseño de tablas, historial y progreso guardado entre sesiones.
 - [ ] **Fase 2.5** — Leer correo (Gmail/Outlook): resumen de mensajes nuevos.
