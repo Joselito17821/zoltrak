@@ -21,12 +21,10 @@ Un asistente virtual personal (estilo Jarvis) al que se le puede hablar o escrib
 
 ## Arquitectura
 
-```
-zoltrak/
-  brain/    → cerebro en Python (IA, acciones, voz, correo)
-  ui/       → interfaz en Java + JavaFX (orbe, mapa, diálogo)
-  db/       → esquema y scripts de PostgreSQL
-```
+    zoltrak/
+      brain/    → cerebro en Python (IA, acciones, voz, correo)
+      ui/       → interfaz en Java + JavaFX (orbe, mapa, diálogo)
+      db/       → esquema y scripts de PostgreSQL
 
 - **brain/**: lógica del asistente. Usa Ollama (modelo `llama3.2:3b`, local y gratis) para entender lenguaje natural, `subprocess`/`os` para acciones del sistema, IMAP/API de Gmail para correo, `SpeechRecognition` + una librería TTS (Piper o Coqui, aún por decidir) para voz. Se expone como una API local con Flask para que Java le hable por HTTP.
 - **db/**: PostgreSQL. Guarda historial de conversación y progreso del "viaje". Diseño de tablas pendiente de definir en la Fase 2.
@@ -34,21 +32,21 @@ zoltrak/
 
 ## Decisiones ya tomadas
 
-- **IA de lenguaje**: Ollama local, modelo `llama3.2:3b` (liviano, compatible con 16GB RAM + GTX 1650). Se puede subir a `llama3.1:8b` si hace falta más calidad de respuesta.
+- **IA de lenguaje**: Ollama local, modelo `llama3.2:3b` (liviano, compatible con 16GB RAM + GTX 1650). Decisión fija, no se reconsidera `llama3.1:8b` salvo pedido explícito.
 - **Interfaz visual**: JavaFX puro (no Angular/React ni Node) — proporcional al tamaño del proyecto, con CSS propio y soporte de animaciones suficiente. `WebView` queda como plan B si algo se necesita más adelante.
-- **Representación visual del asistente**: híbrida — se empieza con un orbe/luz animado (100% código, sin necesidad de arte), y más adelante se evalúa agregar un panel con personaje ilustrado propio (no el de Frieren, por derechos).
+- **Representación visual del asistente**: empieza con un orbe/luz animado (100% código, sin necesidad de arte) como paso intermedio. La meta es un personaje ilustrado estilo anime (no el de Frieren, por derechos) — se evaluará VTube Studio (modelo Live2D + API por WebSocket) como alternativa a construir la animación a mano en JavaFX.
 - **Voz**: no se clona la voz de la actriz de Frieren (derechos de voz de una persona real). Se usará una voz TTS gratuita y de buena calidad (Piper o Coqui TTS), ajustada en tono/velocidad para transmitir calma, sin ser una copia de nadie.
 - **Fuente de "mensajes nuevos"**: correo (Gmail/Outlook), vía IMAP o API de Gmail.
 - **Editor**: VS Code, con extensión de Python (Pylance + Debugger incluidos) y Java Extension Pack. Se descartó usar PyCharm/IntelliJ por separado para no dividir el flujo de trabajo.
 - **Entorno virtual**: vive dentro de `brain/venv`, porque solo esa carpeta ejecuta Python.
-- **Control de versiones**: repositorio Git inicializado y publicado en GitHub (privado, mientras el proyecto está en construcción), con `.gitignore` excluyendo `venv/`, `__pycache__/`, `.env`, entre otros.
+- **Control de versiones**: repositorio Git inicializado y publicado en GitHub (público), con `.gitignore` excluyendo `venv/`, `__pycache__/`, `.env`, entre otros.
 - **Automatización/agentes (Claude Code, Copilot en modo agente)**: se reservan para tareas mecánicas (Git, correr/probar código) una vez la lógica ya esté entendida — no para resolver fases completas de golpe, ya que el objetivo es aprender paso a paso.
 
 ## Ruta de desarrollo (fases)
 
 - [x] **Fase 0** — Preparar el terreno: verificar Python/Java/PostgreSQL, instalar Ollama y bajar el modelo, crear estructura de carpetas, entorno virtual.
 - [x] **Fase 1** — El cerebro entiende lenguaje natural (Python + Ollama): script de consola que conversa con personalidad básica. *(conexión con Ollama funcionando; personalidad definida vía rol `system`)*
-- [~] **Fase 1.5** — Acciones sobre el sistema: abrir apps/carpetas/páginas web según la intención detectada.
+- [x] **Fase 1.5** — Acciones sobre el sistema: abrir apps/carpetas/páginas web según la intención detectada.
 - [ ] **Fase 2** — Memoria persistente (Python + PostgreSQL): diseño de tablas, historial y progreso guardado entre sesiones.
 - [ ] **Fase 2.5** — Leer correo (Gmail/Outlook): resumen de mensajes nuevos.
 - [ ] **Fase 3** — El cerebro como servicio (Flask): API local que separa el cerebro de la interfaz.
@@ -64,4 +62,4 @@ zoltrak/
 
 ## Estado actual
 
-Fase 1.5 en progreso (prototipo funcionando) — Zoltrak detecta acciones por palabras clave y abre apps desde un diccionario (probado con Spotify y Chrome), pero falta el set completo de apps/carpetas reales, optimizar la detección para que sea más natural, y las rutinas. Se mantiene todo lo de antes: personalidad, bucle de conversación, memoria de sesión..
+Fase 1.5 completa — Zoltrak detecta acciones por palabras clave y abre apps, páginas web y carpetas desde tres diccionarios separados (`apps`, `paginas_web`, `carpetas`), unidos en uno solo (`todo`) para la búsqueda. Usa `rapidfuzz` para tolerar errores de tecleo en el nombre. Se mantiene todo lo de antes: personalidad, bucle de conversación, memoria de sesión, salida por palabra clave, manejo de error si Ollama está apagado. Siguiente: rutinas tipo "modo estudio"/"modo juego" (agrupar varias entradas de `todo` bajo un nombre), antes de saltar a la Fase 2 (PostgreSQL).
