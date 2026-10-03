@@ -60,6 +60,19 @@ Un asistente virtual personal (estilo Jarvis) al que se le puede hablar o escrib
 - [ ] **Fase 5** — Mapa de viaje: nodos/lugares que se iluminan según el progreso guardado en PostgreSQL.
 - [ ] **Fase 6** — Pulir y personalizar: CSS definitivo, frases/personalidad final, panel de personaje ilustrado (opcional).
 
+## Funcionalidades futuras
+
+- [ ] **Fase 7** — Empaquetar la app: llevar Zoltrak de prototipo personal a algo compartible.
+  - [ ] 7.1 Distribuir v1 con Ollama instalado por separado (gratis); evaluar v2 con Ollama embebido cuando se sepa el peso final de la app
+  - [ ] 7.2 Rutas portables con variables de entorno de Windows (`os.getenv`, `os.path.expanduser`)
+  - [ ] 7.3 Detección automática de apps/juegos instalados (Registro de Windows, Menú Inicio, `libraryfolders.vdf` de Steam)
+  - [ ] 7.4 Flujo de "no está registrado": buscar automático, confirmar con el usuario, pedir ruta/URL a mano (o selector de archivos) si falla
+  - [ ] 7.5 Biblioteca de +50 páginas web comunes incluida de fábrica
+  - [ ] 7.6 Varias voces TTS para elegir
+  - [ ] 7.7 Varios modos de representación visual (bolita simple tipo Siri, VTuber/Live2D)
+  - [ ] 7.8 Cargar un modelo propio de Ollama (si el usuario tiene uno de pago/personalizado)
+  - [ ] 7.9 Evaluar abrir contenido específico por nombre (video de YouTube, canción de Spotify, repo de GitHub)
+
 ## Estado actual
 
 Fase 1.5 completa — Zoltrak detecta acciones por palabras clave y abre apps, páginas web y carpetas desde tres diccionarios separados (`apps`, `paginas_web`, `carpetas`), unidos en uno solo (`todo`) para la búsqueda. Usa `rapidfuzz` para tolerar errores de tecleo en el nombre. Se mantiene todo lo de antes: personalidad, bucle de conversación, memoria de sesión, salida por palabra clave, manejo de error si Ollama está apagado. Siguiente: rutinas tipo "modo estudio"/"modo juego" (agrupar varias entradas de `todo` bajo un nombre), antes de saltar a la Fase 2 (PostgreSQL).
