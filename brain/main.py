@@ -28,6 +28,7 @@ historial=[
         '''}, 
     ]
 apps = {
+    #Actualizar con las apps más usadas por mi
         "spotify": r"C:\Users\Jose Manuel\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Spotify.lnk",
         "discord": r"C:\Users\Jose Manuel\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Discord Inc\Discord.lnk",
         "steam": r"C:\Users\Jose Manuel\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Steam.lnk",
@@ -36,6 +37,7 @@ apps = {
         }
 
 paginas_web = {
+    #Actualizar con las páginas web más usadas en general
         "github": "https://github.com/Joselito17821/zoltrak",
         "youtube": "https://www.youtube.com",
         "gmail": "https://mail.google.com",
@@ -44,6 +46,7 @@ paginas_web = {
         }
 
 carpetas = {
+    #Actualizar con las carpetas más usadas por mi
         "estudio": r"C:\.Jose Manuel\Estudio",
         "proyectos": r"C:\.Jose Manuel\Estudio\Programación\Proyectos",
         "zoltrak": r"C:\.Jose Manuel\Estudio\Programación\Proyectos\ZOLTRAK\zoltrak",
@@ -55,9 +58,30 @@ todo.update(apps)
 todo.update(paginas_web)
 todo.update(carpetas)
 
+modos = {
+    #Crear nuevos modos ( atajo para abir muchas apps que suelo usar juntas con un solo comando) 
+    "modo estudio": ["estudio", "github", "onenote"],
+    "modo juego": ["steam", "discord", "spotify"],
+}
+
 while True:
     input_text = input("Usuario: ")
 
+    encontro = None
+    for clave in modos:
+        if clave in input_text.lower():
+            encontro = clave        
+            break
+        
+    if encontro:
+        for nombre_app in modos[encontro]:
+            try:
+                os.startfile(todo[nombre_app])
+                print("Zoltrak: Allí va tu camino.")
+            except FileNotFoundError:
+                print("Zoltrak: No logro encontrar ese camino. Quizás se ha perdido con el tiempo.")
+        continue
+        
     palabras_claves_para_ejecutar = ["ejecutar", "haz esto", "haz aquello", "realiza esto", "realiza aquello", "abre"]
     if any(palabra in input_text.lower() for palabra in palabras_claves_para_ejecutar):
         palabras_input = input_text.lower().split()
