@@ -72,6 +72,7 @@ Un asistente virtual personal (estilo Jarvis) al que se le puede hablar o escrib
   - [ ] 7.7 Varios modos de representación visual (bolita simple tipo Siri, VTuber/Live2D)
   - [ ] 7.8 Cargar un modelo propio de Ollama (si el usuario tiene uno de pago/personalizado)
   - [ ] 7.9 Evaluar abrir contenido específico por nombre (video de YouTube, canción de Spotify, repo de GitHub)
+  - [ ] 7.10 Personalidad y voz configurable por personaje visual (elegir, generar aleatoria o escribir la propia)
 
 ## Estado actual
 

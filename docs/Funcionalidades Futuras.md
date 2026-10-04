@@ -85,6 +85,17 @@ Pregunta abierta: ¿se puede pedir "ábreme YouTube y reproduce *Hola Juanito de
 
 **Conclusión:** es viable sin costo para una primera versión, pero necesita más investigación concreta (cuál herramienta usar en cada caso) al llegar a esa fase. Se incluye como funcionalidad futura a evaluar en detalle, no se descarta.
 
+## 12. Personalidad y voz por personaje
+
+Cada apariencia visual (bolita Zoltrak, un VTuber descargado, Frieren, Fern, Miku, etc.) tendría su propia personalidad y voz asociadas, no una personalidad fija para todo el asistente:
+
+- Al cambiar de imagen, el asistente se presenta con el nombre y la personalidad de ese personaje (ej. cambiar a Frieren hace que se presente como Frieren, con su forma de hablar).
+- **Voces:** para la bolita, voces genéricas (masculina/femenina/robot). Para un personaje conocido (VTuber existente, Frieren, Miku), buscar su voz real o replicarla con IA; si no es posible, una voz creada a mano que le quede bien al personaje.
+- **Configuración de personalidad:** debe ser tan configurable como la de Zoltrak hoy (reglas, tono, rasgos definidos por el usuario). Para cuando alguien cargue una imagen sin personalidad definida (ej. un familiar con su propia VTuber descargada o comprada), se le ofrecen tres opciones:
+  1. Elegir una personalidad ya creada (ej. "personalidad de Frieren").
+  2. Generar una personalidad aleatoria.
+  3. Escribir la suya propia, con los mismos campos que ya existen para Zoltrak (reglas, tono, rasgos).
+
 ## Nota — tolerancia de lenguaje natural
 
 Ya quedó decidido (no es una funcionalidad nueva de esta fase): la detección estricta de palabras exactas como "abre" se reemplaza en la Fase 3.5 por el JSON estructurado de Ollama, que sí entiende variantes como "ábreme", "ejecútame" o "ayúdame a abrir" sin necesitar que la palabra exacta esté escrita.
