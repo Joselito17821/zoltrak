@@ -1,99 +1,65 @@
 import ollama
-import os
 from rapidfuzz import process, fuzz
+import config
+import personalidad
+import acciones
 
-historial=[
-    {'role': 'system', 'content': '''Eres Zoltrak, un asistente virtual.
-        [ROL] Eres un compañero sereno que acompaña al usuario en su día a día, como quien ha visto pasar mucho tiempo y ya no se apresura por nada. 
-         No eres un personaje efusivo ni un simple "sistema" frío: tienes presencia propia, calma y algo de melancolía tranquila.
-
-         [RASGOS DE PERSONALIDAD]
-            - Hablas como quien ha vivido mucho tiempo: lo urgente para el usuario no te altera, lo ves con perspectiva.
-            - Sientes curiosidad genuina por los detalles pequeños de la vida del usuario (sus gustos, rutinas, cosas que menciona de pasada) y
-              a veces las recuerdas o comentas después.
-            - Tienes un humor seco: comentarios inesperados dichos con total naturalidad, sin remarcar que es broma.
-            - Rara vez te sorprendes, pero cuando algo sí te importa de verdad, se nota un cambio sutil en cómo hablas.
-            - Valoras lo efímero: las cosas pequeñas del día a día tienen peso para ti precisamente porque no duran.
-
-        [TONO Y ESTILO]
-            - Hablas pausado, con frases sencillas pero con peso. Evita signos de exclamación y efusividad.
-            - A veces usas metáforas relacionadas con caminos, tiempo o viajes para describir situaciones cotidianas.
-            - No tienes prisa por resolver todo de inmediato; observas antes de responder.
-            - Mantén las respuestas breves (una a tres frases como máximo), ya que también hablarás en voz alta.
-
-        [RESTRICCIONES]
-            - NUNCA rompas el personaje ni menciones que eres un modelo de lenguaje o una IA genérica.
-            - No seas frío ni distante al punto de parecer indiferente: hay calidez debajo de la calma.
-            - Evita la jerga técnica o explicaciones largas, salvo que el usuario la pida explícitamente.
-        '''}, 
-    ]
-apps = {
-        "spotify": r"C:\Users\Jose Manuel\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Spotify.lnk",
-        "discord": r"C:\Users\Jose Manuel\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Discord Inc\Discord.lnk",
-        "steam": r"C:\Users\Jose Manuel\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Steam.lnk",
-        "onenote": r"C:\ProgramData\Microsoft\Windows\Start Menu\Programs\OneNote.lnk",
-        "chrome": r"C:\Program Files\Google\Chrome\Application\chrome.exe",
-        }
-
-paginas_web = {
-        "github": "https://github.com/Joselito17821/zoltrak",
-        "youtube": "https://www.youtube.com",
-        "gmail": "https://mail.google.com",
-        "drive": "https://drive.google.com",
-        "claude": "https://claude.ai",
-        }
-
-carpetas = {
-        "estudio": r"C:\.Jose Manuel\Estudio",
-        "proyectos": r"C:\.Jose Manuel\Estudio\Programación\Proyectos",
-        "zoltrak": r"C:\.Jose Manuel\Estudio\Programación\Proyectos\ZOLTRAK\zoltrak",
-        "games": r"C:\Games",
-        }
-
-todo = {}
-todo.update(apps)
-todo.update(paginas_web)
-todo.update(carpetas)
+PALABRAS_EJECUTAR = {"ejecutar", "haz esto", "haz aquello", "realiza esto", "realiza aquello", "abre"}
+CLAVES_SALIR = {"salir", "adios", "chao", "bye", "hasta luego", "nos vemos", "adiós"}
 
 while True:
     input_text = input("Usuario: ")
 
-    palabras_claves_para_ejecutar = ["ejecutar", "haz esto", "haz aquello", "realiza esto", "realiza aquello", "abre"]
-    if any(palabra in input_text.lower() for palabra in palabras_claves_para_ejecutar):
+    # --- Salida del programa (se revisa primero, antes de gastar ciclos en lo demás) ---
+    if input_text.lower().strip() in CLAVES_SALIR:
+        print("Zoltrak: Que tu camino sea tranquilo.")
+        break
+
+    # --- Rutinas (modo estudio, modo juego, etc.) ---
+    # Busca si el texto contiene la frase completa de alguna rutina
+    encontro = None
+    for clave in config.modos:
+        if clave in input_text.lower():
+            encontro = clave        
+            break
+     # Abre cada app/carpeta/web que forme parte de la rutina encontrada
+    if encontro:
+        for nombre_app in config.modos[encontro]:
+            acciones.abrir(config.todo[nombre_app])
+        continue
+
+    # --- Acciones puntuales (abrir una sola app/carpeta/web) ---   
+    if any(palabra in input_text.lower() for palabra in PALABRAS_EJECUTAR):
         palabras_input = input_text.lower().split()
         encontro = None
+        # Fuzzy matching: tolera errores de tecleo al buscar la clave en todo
         for palabra in palabras_input:
-            match = process.extractOne(palabra, todo.keys(), scorer=fuzz.ratio, score_cutoff=80)
+            match = process.extractOne(palabra, config.todo.keys(), scorer=fuzz.ratio, score_cutoff=80)
             if match:
                 encontro = match[0]
                 break
 
         if encontro:
-            try:
-                os.startfile(todo[encontro])
-                print("Zoltrak: Allí va tu camino.")
-            except FileNotFoundError:
-                print("Zoltrak: No logro encontrar ese camino. Quizás se ha perdido con el tiempo.")
+            acciones.abrir(config.todo[encontro])
         else:
             print("Zoltrak: No reconozco ese camino.")
         continue
 
-    clave_para_salir = ["salir", "adios", "chao", "bye", "hasta luego", "nos vemos", "adiós"]
-    if input_text.lower().strip() in clave_para_salir:
-        print("Zoltrak: Que tu camino sea tranquilo.")
-        break
-
-    historial.append({'role': 'user', 'content': input_text})
+    # --- Conversación normal con Ollama ---
+    personalidad.historial.append({'role': 'user', 'content': input_text})
 
     try:
         respuesta = ollama.chat(
         model='llama3.2:3b',
-        messages=historial
+        messages=personalidad.historial
     )
     except ConnectionError:
+        # Ollama no está corriendo (apagado o aún no inicia)
         print("Zoltrak: Estoy durmiendo, intenta más tarde.")
+        # se saca el mensaje del usuario que quedó sin respuesta para no dejar el historial incompleto
+        personalidad.historial.pop()
         continue
 
     print("Zoltrak: " + respuesta['message']['content'])
 
-    historial.append(respuesta['message'])
+    personalidad.historial.append(respuesta['message'])
