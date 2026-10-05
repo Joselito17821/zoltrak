@@ -1,11 +1,22 @@
 import ollama
 from rapidfuzz import process, fuzz
+import database
 import config
 import personalidad
 import acciones
 
 PALABRAS_EJECUTAR = {"ejecutar", "haz esto", "haz aquello", "realiza esto", "realiza aquello", "abre"}
 CLAVES_SALIR = {"salir", "adios", "chao", "bye", "hasta luego", "nos vemos", "adiós"}
+
+# Se traduce el rol de los mensajes guardados en la base de datos a los roles que usa Ollama
+mapa_roles = {'usuario': 'user', 'asistente': 'assistant'}
+
+mensajes_guardados = database.obtener_historial_mensajes()
+
+# Se cargan los mensajes guardados en la base de datos al historial de la personalidad
+for rol, contenido in mensajes_guardados:
+        rol_traducido = mapa_roles[rol]
+        personalidad.historial.append({'role': rol_traducido, 'content': contenido})
 
 while True:
     input_text = input("Usuario: ")
@@ -48,6 +59,7 @@ while True:
     # --- Conversación normal con Ollama ---
     personalidad.historial.append({'role': 'user', 'content': input_text})
 
+
     try:
         respuesta = ollama.chat(
         model='llama3.2:3b',
@@ -60,6 +72,12 @@ while True:
         personalidad.historial.pop()
         continue
 
+    database.guardar_mensajes('usuario', input_text)
+
+
     print("Zoltrak: " + respuesta['message']['content'])
 
     personalidad.historial.append(respuesta['message'])
+    database.guardar_mensajes('asistente', respuesta['message']['content'])
+
+  
