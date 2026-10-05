@@ -96,6 +96,21 @@ Cada apariencia visual (bolita Zoltrak, un VTuber descargado, Frieren, Fern, Mik
   2. Generar una personalidad aleatoria.
   3. Escribir la suya propia, con los mismos campos que ya existen para Zoltrak (reglas, tono, rasgos).
 
+## 13. Buscar/abrir archivos por nombre y crear documentos (con confirmación)
+
+Dos capacidades nuevas, de riesgo y complejidad distintos — no se mezclan en el mismo flujo:
+
+**Buscar y abrir un archivo existente por nombre, dentro de una carpeta** (bajo riesgo, extensión natural de `acciones.abrir()`):
+- El usuario pide, por ejemplo, "ábreme el Word que se llama X" o "el PDF de la carpeta Y".
+- Zoltrak busca dentro de la(s) carpeta(s) indicadas (`os.walk()` o similar) un archivo cuyo nombre coincida, con tolerancia a errores de tecleo (mismo fuzzy matching que ya usa con apps).
+- Al encontrarlo, lo abre con `os.startfile()` — es solo lectura del sistema de archivos, no modifica nada.
+
+**Crear documentos nuevos** (mayor riesgo, funcionalidad separada con reglas propias):
+- El usuario pide algo como "créame en la carpeta Clases de Bases de Datos un PowerPoint y llámalo X".
+- Requiere una librería por tipo de archivo (`python-pptx`, `python-docx`, etc.) y que Ollama genere el contenido (título, estructura) a partir de lo que pida el usuario.
+- **Doble confirmación obligatoria**: Zoltrak repite qué va a crear y dónde, antes de ejecutar — mismo patrón que el auto-registro de apps/webs (Fase 7).
+- **Solo crear, nunca borrar ni sobrescribir**: la función nunca tiene acceso a comandos de borrado; si ya existe un archivo con ese nombre, avisa en vez de reemplazarlo.
+
 ## Nota — tolerancia de lenguaje natural
 
 Ya quedó decidido (no es una funcionalidad nueva de esta fase): la detección estricta de palabras exactas como "abre" se reemplaza en la Fase 3.5 por el JSON estructurado de Ollama, que sí entiende variantes como "ábreme", "ejecútame" o "ayúdame a abrir" sin necesitar que la palabra exacta esté escrita.
