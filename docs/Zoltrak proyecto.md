@@ -73,6 +73,7 @@ Un asistente virtual personal (estilo Jarvis) al que se le puede hablar o escrib
   - [ ] 7.8 Cargar un modelo propio de Ollama (si el usuario tiene uno de pago/personalizado)
   - [ ] 7.9 Evaluar abrir contenido específico por nombre (video de YouTube, canción de Spotify, repo de GitHub)
   - [ ] 7.10 Personalidad y voz configurable por personaje visual (elegir, generar aleatoria o escribir la propia)
+- [ ] **Fase 8** — Buscar/abrir archivos por nombre y crear documentos (con confirmación): búsqueda de archivos existentes en carpetas por nombre (extensión de `abrir()`); creación de documentos (PowerPoint, Word) con doble confirmación obligatoria, sin capacidad de borrar ni sobrescribir
 
 ## Estado actual
 
