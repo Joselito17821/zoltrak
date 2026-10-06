@@ -6,29 +6,40 @@ Proyecto de aprendizaje: se construye paso a paso, sin que la IA resuelva las fa
 
 ## Estado actual
 
-Fase 1.5 completa. Ver `Zoltrak proyecto.md` para la ruta de desarrollo completa y las decisiones de arquitectura.
+Fase 1.5 completa, Fase 2 (memoria persistente) en progreso. Ver `Zoltrak proyecto.md` para la ruta de desarrollo completa y las decisiones de arquitectura.
 
 ## Stack
 
 - **brain/** — Python + Ollama (modelo `llama3.2:3b`, local)
 - **ui/** — Java + JavaFX (aún no iniciado); se evaluará VTube Studio (API por WebSocket) como alternativa para el personaje ilustrado final
-- **db/** — PostgreSQL (aún no iniciado)
+- **db/** — PostgreSQL (en progreso: historial de conversación persistente)
 
-## Cómo correrlo
-
-Requiere [Ollama](https://ollama.com) instalado con el modelo `llama3.2:3b` descargado (`ollama pull llama3.2:3b`).
-
+## Cómo correrlo en etapa de desarrollo
+ 
+Requiere [Ollama](https://ollama.com) instalado con el modelo `llama3.2:3b` descargado (`ollama pull llama3.2:3b`), y [PostgreSQL](https://www.postgresql.org/) corriendo localmente con una base de datos creada a partir de `db/schema.sql`.
+ 
+Crea un archivo `.env` en la raíz del proyecto con tus credenciales de PostgreSQL:
+ 
+```
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=zoltrak
+DB_USER=postgres
+DB_PASSWORD=tu_contraseña
+```
+ 
 ```
 cd brain
 venv\Scripts\activate
-pip install -r requirements.txt
+pip install -r ../requirements.txt
 python main.py
 ```
 
 ## Qué hace hoy
 
-- Conversa con personalidad fija, manteniendo memoria de la sesión actual.
-- Reconoce intención de acción ("abre X") y abre apps, páginas web o carpetas definidas en `main.py`.
+- Conversa con personalidad fija, con memoria persistente entre sesiones (PostgreSQL).
+- Reconoce intención de acción ("abre X") y abre apps, páginas web o carpetas definidas en `config.py`.
+- Reconoce rutinas ("modo estudio") que abren varias cosas a la vez.
 - Tolera errores de tecleo en el nombre (`rapidfuzz`).
 - No se cae si Ollama está apagado; avisa y sigue funcionando.
 

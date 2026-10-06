@@ -77,4 +77,7 @@ Un asistente virtual personal (estilo Jarvis) al que se le puede hablar o escrib
 
 ## Estado actual
 
-Fase 1.5 completa — Zoltrak detecta acciones por palabras clave y abre apps, páginas web y carpetas desde tres diccionarios separados (`apps`, `paginas_web`, `carpetas`), unidos en uno solo (`todo`) para la búsqueda. Usa `rapidfuzz` para tolerar errores de tecleo en el nombre. Se mantiene todo lo de antes: personalidad, bucle de conversación, memoria de sesión, salida por palabra clave, manejo de error si Ollama está apagado. Siguiente: rutinas tipo "modo estudio"/"modo juego" (agrupar varias entradas de `todo` bajo un nombre), antes de saltar a la Fase 2 (PostgreSQL).
+Fase 1.5 completa — Zoltrak detecta acciones por palabras clave y abre apps, páginas web y carpetas desde tres diccionarios separados (`apps`, `paginas_web`, `carpetas`), unidos en uno solo (`todo`) para la búsqueda. Usa `rapidfuzz` para tolerar errores de tecleo en el nombre. Incluye rutinas (`modos`) que agrupan varias entradas de `todo` bajo un nombre (ej. "modo estudio"). Código modularizado en `config.py`, `personalidad.py`, `acciones.py` y `database.py`, con GitHub Flow (rama por tarea + PR) como flujo de Git.
+
+Fase 2 en progreso — memoria persistente con PostgreSQL. Ya completado: diseño de tablas (`mensajes`, `hechos`), conexión vía `.env` + `psycopg2`, e historial de conversación persistente entre sesiones (Zoltrak recuerda lo hablado aunque se cierre y reabra el programa). Pendiente: que Zoltrak guarde datos sueltos (`hechos`) de forma estructurada durante la conversación, no solo como texto plano del historial.
+
