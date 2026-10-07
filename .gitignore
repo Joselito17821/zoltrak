@@ -11,3 +11,7 @@ __pycache__/
 
 # Variables de entorno / secretos (los vamos a necesitar pronto, para el correo)
 .env
+
+# Configuración de Google Cloud 
+credentials.json
+token.json
