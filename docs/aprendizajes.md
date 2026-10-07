@@ -63,7 +63,7 @@ Notas de estudio sobre los conceptos de programación practicados en cada fase. 
 
 **Commits atómicos:** un commit por cambio con sentido propio, con un mensaje que describa qué se corrigió o agregó. Facilita revisar el historial después, sobre todo en un repo público.
 
-**Conventional Commits:** prefijo en el mensaje (`feat:`, `fix:`, `refactor:`, `docs:`) que indica el tipo de cambio de un vistazo, en minúscula por convención.
+**Conventional Commits:** prefijo en el mensaje (`feat:`, `fix:`, `refactor:`, `docs:` y `chore:`) que indica el tipo de cambio de un vistazo, en minúscula por convención.
 
 **GitHub Flow (el que usa este proyecto):** `main` siempre queda desplegable. Cada cambio va en una rama corta por tarea puntual (no por fase ni por funcionalidad completa), nombrada `tipo/nombre-corto` (ej. `feature/modo-estudio`, `fix/personalidad-zoltrak`). Al terminar, se abre un Pull Request a `main`, se revisa (Copilot code review cuando aplica), y se mergea con **squash** (condensa todos los commits de la rama en uno solo, para un historial de `main` limpio). La rama se borra después de mergeada — el historial completo (commits, diff, PR) queda disponible para siempre en los Pull Requests cerrados de GitHub, aunque la rama ya no exista.
 
