@@ -49,6 +49,27 @@ def obtener_servicio_gmail():
     # 3.5 Devolver ese objeto
     return service
 
+#4 buscar_ids(servicio, cantidad=5, dias=None, remitente=None)
+def buscar_ids(servicio, cantidad=5, dias=None, remitente=None):
+    partes = ['category:primary']
+    if dias:
+        partes.append(f"newer_than:{dias}d")
+    if remitente:
+        partes.append(f'from:"{remitente}"')
+    texto_q = " ".join(partes)
+
+    respuesta = servicio.users().messages().list(
+        userId='me', q=texto_q, maxResults=cantidad
+    ).execute()
+    ids = []
+    for mensaje in respuesta.get('messages', []):
+        ids.append(mensaje['id'])
+    return ids
+
+
+
 if __name__ == "__main__":
     servicio = obtener_servicio_gmail()
-    print(servicio)
+    print(buscar_ids(servicio))
+    print(buscar_ids(servicio, cantidad=3, dias=3))
+    print(buscar_ids(servicio, remitente="zzzzzz"))
