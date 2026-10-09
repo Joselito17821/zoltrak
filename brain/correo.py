@@ -1,4 +1,3 @@
-# correo.py — Autenticación con Gmail (solo lectura)
 
 # 1. IMPORTAR LIBRERÍAS
 #    (os, las clases de google-auth, google-auth-oauthlib y google-api-python-client)
@@ -16,9 +15,13 @@ SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 CREDENTIALS_PATH = os.path.join(os.path.dirname(__file__), 'credentials.json')
 #    - Ruta de token.json (junto a este archivo)
 TOKEN_PATH = os.path.join(os.path.dirname(__file__), 'token.json')
+#    - MAX_CORREOS: máximo de correos que se pueden pedir en una búsqueda
+MAX_CORREOS = 10
+
 
 # 3. FUNCIÓN obtener_servicio_gmail()
 def obtener_servicio_gmail():
+    """Devuelve el objeto de Gmail listo para usar, o None si el login falla."""
     # 3.1 Empezar con creds = None
     creds = None
     # 3.2 Si token.json existe -> cargarlo en creds
@@ -49,27 +52,48 @@ def obtener_servicio_gmail():
     # 3.5 Devolver ese objeto
     return service
 
-#4 buscar_ids(servicio, cantidad=5, dias=None, remitente=None)
+
+# 4. FUNCIÓN buscar_ids(servicio, cantidad=5, dias=None, remitente=None)
 def buscar_ids(servicio, cantidad=5, dias=None, remitente=None):
+    """Devuelve una lista con los id de los correos que cumplan los filtros.
+
+    La búsqueda siempre se limita a la pestaña Principal y a un máximo de
+    MAX_CORREOS resultados, aunque se pida una cantidad mayor. Si no hay
+    resultados, devuelve una lista vacía.
+    """
+    # 4.0 Limitar la cantidad pedida al máximo permitido
+    cantidad = min(cantidad, MAX_CORREOS)
+    # 4.1 Armar el texto de búsqueda (q) como una lista de pedazos
+    #     La parte fija: solo la pestaña Principal
     partes = ['category:primary']
+    # 4.2 Si se pidió filtrar por días, agregar el filtro (ej. newer_than:3d)
     if dias:
         partes.append(f"newer_than:{dias}d")
+    # 4.3 Si se pidió un remitente, agregarlo entre comillas dobles
+    #     (así Gmail toma el nombre completo y no solo la primera palabra)
     if remitente:
         partes.append(f'from:"{remitente}"')
+    # 4.4 Unir los pedazos con espacios para formar el texto final de búsqueda
     texto_q = " ".join(partes)
-
+    # 4.5 Pedir a Gmail la lista de mensajes que cumplen la búsqueda
+    #     (devuelve solo identificadores, no el contenido del correo)
     respuesta = servicio.users().messages().list(
         userId='me', q=texto_q, maxResults=cantidad
     ).execute()
+    # 4.6 Sacar solo los id de la respuesta
+    #     .get('messages', []) evita el error cuando no hay correos
+    #     (en ese caso la clave 'messages' no existe)
     ids = []
     for mensaje in respuesta.get('messages', []):
         ids.append(mensaje['id'])
+    # 4.7 Devolver la lista de id (vacía si no hubo resultados)
     return ids
 
 
-
+# 5. PRUEBA MANUAL (solo corre al ejecutar este archivo directamente)
 if __name__ == "__main__":
     servicio = obtener_servicio_gmail()
     print(buscar_ids(servicio))
     print(buscar_ids(servicio, cantidad=3, dias=3))
     print(buscar_ids(servicio, remitente="zzzzzz"))
+    print(len(buscar_ids(servicio, cantidad=500)))
