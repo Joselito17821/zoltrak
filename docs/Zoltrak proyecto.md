@@ -97,7 +97,6 @@ Fase 2.5 en progreso — lectura de correo con la API de Gmail. `correo.py` aute
 ## Comportamientos conocidos (por diseño, se resuelven en la Fase 3.5)
 
 - **"abreme algo"** activa el bloque de acciones por contener "abre" y responde "No reconozco ese camino". Se mantiene el aviso para no ocultar fallos de rutas reales.
-- **"puedes abrir youtube"** no abre nada: "abrir" no contiene el trozo "abre". Con "abre youtube" sí funciona.
 - **"bye luego hablamos"** no cierra el programa; solo "bye" exacto. Es intencional, para evitar cierres falsos.
 - **Correo: falsos positivos.** Cualquier frase con una palabra de lectura y una de correo activa la lectura, aunque no sea una petición (por ejemplo, "lee una hermosa mañana correo"). "Abre mis correos" no la activa, porque "abre" no es palabra de lectura.
 - **Lo que Zoltrak muestra de los correos no entra al historial** de la conversación, así que Ollama no sabe de qué se habló.
