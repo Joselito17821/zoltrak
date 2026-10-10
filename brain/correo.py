@@ -89,11 +89,27 @@ def buscar_ids(servicio, cantidad=5, dias=None, remitente=None):
     # 4.7 Devolver la lista de id (vacía si no hubo resultados)
     return ids
 
+# 5. FUNCIÓN leer_correos(servicio, id_correo)
+def leer_correo(servicio, id_correo):
+    """Devuelve un diccionario con remitente, asunto, fecha y snippet del correo."""
+    mensaje = servicio.users().messages().get(
+        userId='me', id=id_correo, format='metadata',
+        metadataHeaders=['From', 'Subject', 'Date']
+    ).execute()
+    encabezados = {}
+    for h in mensaje['payload']['headers']:
+        encabezados[h['name']] = h['value']
+    return {
+        'remitente': encabezados.get('From', 'Remitente desconocido'),
+        'asunto': encabezados.get('Subject', '(sin asunto)'),
+        'fecha': encabezados.get('Date', 'Fecha desconocida'),
+        'snippet': mensaje.get('snippet', '(sin snippet)'),
+    }
 
-# 5. PRUEBA MANUAL (solo corre al ejecutar este archivo directamente)
+
+#PRUEBA MANUAL (solo corre al ejecutar este archivo directamente)
 if __name__ == "__main__":
     servicio = obtener_servicio_gmail()
-    print(buscar_ids(servicio))
-    print(buscar_ids(servicio, cantidad=3, dias=3))
-    print(buscar_ids(servicio, remitente="zzzzzz"))
-    print(len(buscar_ids(servicio, cantidad=500)))
+    ids = buscar_ids(servicio, cantidad=3)
+    for id_correo in ids:
+        print(leer_correo(servicio, id_correo))
