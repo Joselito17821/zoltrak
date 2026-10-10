@@ -12,6 +12,7 @@ paginas_web = {
         "github": "https://github.com/Joselito17821/zoltrak",
         "youtube": "https://www.youtube.com",
         "gmail": "https://mail.google.com",
+        "correo": "https://mail.google.com",
         "drive": "https://drive.google.com",
         "claude": "https://claude.ai",
         }
