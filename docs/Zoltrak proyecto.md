@@ -100,6 +100,5 @@ Fase 2.5 en progreso — lectura de correo con la API de Gmail. `correo.py` aute
 - **"puedes abrir youtube"** no abre nada: "abrir" no contiene el trozo "abre". Con "abre youtube" sí funciona.
 - **"bye luego hablamos"** no cierra el programa; solo "bye" exacto. Es intencional, para evitar cierres falsos.
 - **Correo: falsos positivos.** Cualquier frase con una palabra de lectura y una de correo activa la lectura, aunque no sea una petición (por ejemplo, "lee una hermosa mañana correo"). "Abre mis correos" no la activa, porque "abre" no es palabra de lectura.
-- **Entradas vacías**: pulsar Enter sin escribir manda texto vacío a Ollama y lo guarda en la base de datos. Pendiente de corregir en una rama aparte (`fix/ignorar-entrada-vacia`).
 - **Lo que Zoltrak muestra de los correos no entra al historial** de la conversación, así que Ollama no sabe de qué se habló.
 - **Los mensajes de diagnóstico de `correo.py`** (errores de login, conexión o API) se imprimen en consola. Cuando llegue la voz habrá que separarlos de lo que Zoltrak dice al usuario.
