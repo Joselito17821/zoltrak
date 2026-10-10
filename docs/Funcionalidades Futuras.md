@@ -1,6 +1,6 @@
 # Zoltrak — Funcionalidades futuras (Fase 7)
 
-Este documento detalla, una por una, las funcionalidades que se evaluaron como parte de la futura distribución de Zoltrak. No son parte de la fase actual (Fase 1.5 en adelante hasta la 6); se retoman cuando el asistente esté terminado para uso personal y se quiera compartir o pulir más allá de eso. Sirve como memoria detallada para no perder ninguna idea discutida.
+Este documento detalla, una por una, las funcionalidades que se evaluaron como parte de la futura distribución de Zoltrak. No son parte de las fases 0 a 6 (el asistente para uso personal); se retoman cuando el asistente esté terminado para uso personal y se quiera compartir o pulir más allá de eso. Sirve como memoria detallada para no perder ninguna idea discutida.
 
 ## 1. Empaquetar la app
 
@@ -60,6 +60,14 @@ Para que Zoltrak sirva sin configuración desde el primer uso, se incluye un set
 
 Varias voces TTS para elegir (masculina, femenina, tipo robot, tipo animal), en vez de una sola voz fija, para que cada persona pueda ajustar Zoltrak a su gusto.
 
+El motor de voz debe ser intercambiable: el resto de Zoltrak llama a una sola función (por ejemplo, `hablar(texto)`) y el motor concreto queda detrás de ella. Así se puede rotar entre motores sin reescribir código:
+
+- **Piper** — motor por defecto. Local, gratis y sin internet. Voz neutral, con variante masculina y femenina, pensada para quien no tiene un personaje específico.
+- **Coqui TTS** — opcional, también local. A revisar en su momento: licencia del modelo, y si sirve para acercarse a la voz de un personaje a partir de una muestra de audio, sin salir del PC.
+- **Fish Audio** — en la nube, con la clave de API propia de Jose (ver la nota al final de este documento). Es solo para uso de Jose: no se ofrece a otras personas ni va en ninguna versión que se comparta.
+
+Cada personaje o apariencia tiene asignada su voz: una voz genérica de Piper o una voz más cercana al personaje (ver el punto 12).
+
 ## 8. Modos de representación visual
 
 Varias opciones de apariencia disponibles de fábrica, no solo el personaje ilustrado final:
@@ -96,6 +104,12 @@ Cada apariencia visual (bolita Zoltrak, un VTuber descargado, Frieren, Fern, Mik
   2. Generar una personalidad aleatoria.
   3. Escribir la suya propia, con los mismos campos que ya existen para Zoltrak (reglas, tono, rasgos).
 
+**Modelos de VTuber:** cargar un modelo propio y cambiar entre modelos está disponible en **todas** las versiones, incluida la pública. Lo que cambia es qué modelos trae la app de fábrica: solo los que Jose haya verificado que su licencia permite redistribuir. Cada modelo tiene su propia licencia (muchos prohíben redistribuirlos, incluso gratis), así que ante la duda no se incluye y cada persona lo consigue en la fuente original.
+
+**Voces de personajes con derechos:** Zoltrak no las incluye ni las distribuye. Cada persona puede cargar las suyas para uso personal, bajo su responsabilidad y según la licencia de cada archivo.
+
+Los archivos de terceros que no tengan licencia de redistribución viven en una carpeta ignorada por Git y nunca se suben al repositorio, que es público.
+
 ## 13. Buscar/abrir archivos por nombre y crear documentos (con confirmación)
 
 Dos capacidades nuevas, de riesgo y complejidad distintos — no se mezclan en el mismo flujo:
@@ -111,6 +125,29 @@ Dos capacidades nuevas, de riesgo y complejidad distintos — no se mezclan en e
 - **Doble confirmación obligatoria**: Zoltrak repite qué va a crear y dónde, antes de ejecutar — mismo patrón que el auto-registro de apps/webs (Fase 7).
 - **Solo crear, nunca borrar ni sobrescribir**: la función nunca tiene acceso a comandos de borrado; si ya existe un archivo con ese nombre, avisa en vez de reemplazarlo.
 
+## 14. Versión personal y versión pública (interruptores)
+
+Zoltrak se puede compartir de dos maneras, con funciones distintas:
+
+| Función | Versión personal (Jose y círculo cercano) | Versión pública (descarga abierta) |
+|---|---|---|
+| Lectura de correo (Gmail) | Activada, para cuentas agregadas como usuarios de prueba | Desactivada |
+| Voz con Piper (local) | Sí | Sí, único motor de voz |
+| Voz con Coqui (local) | Opcional | No incluida |
+| Voz con Fish Audio (nube) | Solo en la instalación de Jose, con su clave | Desactivada |
+| Orbe / bolita animada | Sí | Sí |
+| Cargar y cambiar el modelo de VTuber | Sí | Sí |
+| Modelos de VTuber incluidos de fábrica | Solo los verificados como redistribuibles | Solo los verificados como redistribuibles |
+| Voces de personajes con derechos | Las aporta cada usuario, para uso personal | No se incluyen |
+
+Cómo se implementa: interruptores en `config.py` (por ejemplo, `LEER_CORREO_ACTIVADO` y la lista de motores de voz disponibles) o builds separados. Se construye en la Fase 7, no antes: hoy no hay una versión pública que necesite apagar nada.
+
+Reglas que valen siempre:
+
+- Ningún asset de terceros (modelo, imagen o voz) entra al repositorio sin haber verificado antes que su licencia permite redistribuirlo. El repositorio es público.
+- Ninguna clave ni credencial propia (Gmail, Fish Audio) viaja en una versión compartida.
+- Como la versión personal no se cobra, no hay ingreso de por medio, pero eso no resuelve por sí solo los derechos de los assets de terceros: cada archivo tiene su propia licencia.
+
 ## Nota — tolerancia de lenguaje natural
 
 Ya quedó decidido (no es una funcionalidad nueva de esta fase): la detección estricta de palabras exactas como "abre" se reemplaza en la Fase 3.5 por el JSON estructurado de Ollama, que sí entiende variantes como "ábreme", "ejecútame" o "ayúdame a abrir" sin necesitar que la palabra exacta esté escrita.
@@ -122,3 +159,14 @@ La API de Gmail, para leer correo (`gmail.readonly`), es gratis de usar, pero pu
 Mientras la app esté en modo "Testing" (gratis), solo pueden usar la lectura de correo hasta 100 cuentas agregadas manualmente por el desarrollador, y cada una debe reautorizar el acceso cada 7 días.
 
 Decisión: para uso personal (Jose + círculo cercano), se mantiene en modo Testing sin verificar — cubre el caso real de uso. Si en algún momento se distribuye Zoltrak más ampliamente (descarga pública desde una página web), la funcionalidad de lectura de correo se desactiva para esa versión (feature flag en `config.py`, o un build separado sin esa función compilada) — el resto de funcionalidades de Zoltrak no se ve afectado. Alternativa sin este límite, a reconsiderar si se necesita más adelante: IMAP con contraseña de aplicación (gratis, sin tope de usuarios, pero más fricción de configuración para cada persona).
+
+### Nota — Fish Audio (voces en la nube)
+
+Fish Audio es un servicio en la nube de texto a voz y clonación, con API y una biblioteca de voces de la comunidad. Lo que se pudo verificar (reseñas de terceros y el blog de la empresa, mediados de 2026):
+
+- Tiene un modelo gratuito en su API bajo uso razonable, sin garantía de disponibilidad ni de latencia. El plan de pago por API ronda los 15 dólares por millón de caracteres.
+- Las fuentes no coinciden en si el plan gratuito permite uso comercial (algunas dicen que solo uso personal). **Verificar en la documentación y los términos oficiales antes de depender de ello.**
+- No es algo que se "distribuya": es un servicio al que se accede con una cuenta y una clave de API. En Zoltrak solo lo usa Jose, con su propia clave en el `.env` (por ejemplo, `FISH_API_KEY`). Esa clave no se comparte ni va en ningún build: gastaría su cuota, podría filtrarse y probablemente va contra los términos del servicio.
+- **Privacidad:** el texto que Zoltrak diga sale a los servidores de Fish Audio, incluido lo que lea de los correos. Con Piper o Coqui todo queda en el PC.
+- Necesita internet. Sin conexión, Zoltrak debe caer a Piper.
+- Las voces de la comunidad son de terceros y pueden ser clones de personas reales o de personajes. Son para el uso personal de Jose; no se incluyen ni se redistribuyen con Zoltrak.

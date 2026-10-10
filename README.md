@@ -68,6 +68,8 @@ Notas:
 - Tolera errores de tecleo en el nombre (`rapidfuzz`).
 - No se cae si Ollama está apagado; avisa y sigue funcionando.
 - Lee los últimos correos de tu bandeja principal ("revisa mis correos", "léeme mis últimos mensajes") y muestra remitente y asunto. No se cae si falla el login, la conexión o la API de Gmail.
+- Abre Gmail en el navegador con "abre mis correos" (o "abre gmail").
+- Ignora las entradas vacías: si pulsas Enter sin escribir nada, vuelve a pedir otra frase.
 
 ## Documentación
 
