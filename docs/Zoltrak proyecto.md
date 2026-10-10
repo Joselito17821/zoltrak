@@ -58,7 +58,7 @@ Un asistente virtual personal (estilo Jarvis) al que se le puede hablar o escrib
   - [x] Lectura de remitente, asunto, fecha y snippet, con manejo de errores de la API y de conexión (`leer_correo`, `obtener_correos`)
   - [x] Conexión con `main.py` por palabras clave (una palabra de correo y una de lectura)
   - [ ] Resumen con Ollama (modo detalle), en la rama `feature/resumen-correo`
-  - [ ] Que "abre mis correos" abra Gmail en el navegador (entrada en `config.py`)
+  - [x] Que "abre mis correos" abra Gmail en el navegador (entrada en `config.py`)
 - [ ] **Fase 3** — El cerebro como servicio (Flask): API local que separa el cerebro de la interfaz.
 - [ ] **Fase 3.5** — Voz: reconocimiento de voz (SpeechRecognition) + texto a voz (Piper/Coqui), con tono calmado. Incluye reemplazar la detección por palabras clave por JSON estructurado de Ollama (entiende variantes como "ábreme" o "los de los últimos tres días") y conectar `hechos` a la conversación.
 - [ ] **Fase 4** — Interfaz visual (JavaFX):
