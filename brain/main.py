@@ -24,6 +24,9 @@ for rol, contenido in mensajes_guardados:
 
 while True:
     input_text = input("Usuario: ")
+    if not input_text.strip():
+        print("Zoltrak: No entendí eso, por favor escribe algo.")
+        continue
 
     # --- Salida del programa (se revisa primero, antes de gastar ciclos en lo demás) ---
     if input_text.lower().strip() in CLAVES_SALIR:
