@@ -106,10 +106,26 @@ def leer_correo(servicio, id_correo):
         'snippet': mensaje.get('snippet', '(sin snippet)'),
     }
 
+# 6. FUNCIÓN obtener_correos(cantidad=5, dias=None, remitente=None)
+def obtener_correos(cantidad=5, dias=None, remitente=None):
+    """Devuelve una lista de correos (cada uno es un diccionario), o None si falla el login."""
+    # 6.1 Obtener el servicio de Gmail; si es None (login fallido), devolver None
+    servicio = obtener_servicio_gmail()
+    if servicio is None:
+        return None
+    # 6.2 Buscar los id de los correos con los filtros recibidos
+    ids = buscar_ids(servicio, cantidad=cantidad, dias=dias, remitente=remitente)
+    # 6.3 Leer cada correo y guardarlo en una lista
+    lista_correos = []
+    for id_correo in ids:
+        correo = leer_correo(servicio, id_correo)
+        lista_correos.append(correo)
+    # 6.4 Devolver la lista
+    return lista_correos
+
 
 #PRUEBA MANUAL (solo corre al ejecutar este archivo directamente)
 if __name__ == "__main__":
-    servicio = obtener_servicio_gmail()
-    ids = buscar_ids(servicio, cantidad=3)
-    for id_correo in ids:
-        print(leer_correo(servicio, id_correo))
+    correos = obtener_correos(cantidad=3)
+    for correo in correos:
+        print(correo['asunto'])
