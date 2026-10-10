@@ -4,8 +4,12 @@ import database
 import config
 import personalidad
 import acciones
+from correo import obtener_correos
 
-PALABRAS_EJECUTAR = {"ejecutar", "haz esto", "haz aquello", "realiza esto", "realiza aquello", "abre"}
+PALABRAS_CORREO = {"correo", "correos", "gmail", "mail", "mails"}
+PALABRAS_LEER = {"léeme", "leeme", "lee", "resúmeme", "resumeme", "resume",
+                 "infórmame", "informame", "revisa", "dime", "tengo", "llegaron"}
+PALABRAS_EJECUTAR = {"ejecutar", "haz esto", "haz aquello", "realiza esto", "realiza aquello", "abre", "abir"}
 CLAVES_SALIR = {"salir", "adios", "chao", "bye", "hasta luego", "nos vemos", "adiós"}
 
 # Se traduce el rol de los mensajes guardados en la base de datos a los roles que usa Ollama
@@ -25,6 +29,25 @@ while True:
     if input_text.lower().strip() in CLAVES_SALIR:
         print("Zoltrak: Que tu camino sea tranquilo.")
         break
+
+    # --- Correo (antes de rutinas y acciones) ---
+    # Si el texto tiene una palabra de correo Y una palabra de lectura:
+    if any(palabra in input_text.lower() for palabra in PALABRAS_LEER) and any(palabra in input_text.lower() for palabra in PALABRAS_CORREO):
+        # Pedir los correos (con los valores por defecto)
+        correos = obtener_correos()
+        # Si es None: avisar que no se pudo revisar
+        if correos is None:
+            print("Zoltrak: No se pudieron obtener los correos.")
+        # Si es una lista vacía: avisar que no hay correos
+        elif not correos:
+            print("Zoltrak: No encontré correos en tu bandeja principal.")
+        # Si hay correos: mostrar remitente y asunto de cada uno
+        else:
+            print("Zoltrak: Estos son los correos que encontré:")
+            for correo in correos:
+                print(f"  - {correo['remitente']}: {correo['asunto']}")
+        # continue
+        continue
 
     # --- Rutinas (modo estudio, modo juego, etc.) ---
     # Busca si el texto contiene la frase completa de alguna rutina

@@ -114,3 +114,11 @@ Dos capacidades nuevas, de riesgo y complejidad distintos — no se mezclan en e
 ## Nota — tolerancia de lenguaje natural
 
 Ya quedó decidido (no es una funcionalidad nueva de esta fase): la detección estricta de palabras exactas como "abre" se reemplaza en la Fase 3.5 por el JSON estructurado de Ollama, que sí entiende variantes como "ábreme", "ejecútame" o "ayúdame a abrir" sin necesitar que la palabra exacta esté escrita.
+
+### Nota — lectura de correo (Gmail) y distribución pública
+
+La API de Gmail, para leer correo (`gmail.readonly`), es gratis de usar, pero publicar la app en modo "Production" sin el límite de usuarios requiere pasar una auditoría de seguridad obligatoria de Google (CASA Tier 2), con un costo de $15,000 a $75,000 USD, renovable cada 12 meses — inviable para este proyecto.
+
+Mientras la app esté en modo "Testing" (gratis), solo pueden usar la lectura de correo hasta 100 cuentas agregadas manualmente por el desarrollador, y cada una debe reautorizar el acceso cada 7 días.
+
+Decisión: para uso personal (Jose + círculo cercano), se mantiene en modo Testing sin verificar — cubre el caso real de uso. Si en algún momento se distribuye Zoltrak más ampliamente (descarga pública desde una página web), la funcionalidad de lectura de correo se desactiva para esa versión (feature flag en `config.py`, o un build separado sin esa función compilada) — el resto de funcionalidades de Zoltrak no se ve afectado. Alternativa sin este límite, a reconsiderar si se necesita más adelante: IMAP con contraseña de aplicación (gratis, sin tope de usuarios, pero más fricción de configuración para cada persona).
