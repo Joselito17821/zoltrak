@@ -26,6 +26,8 @@ Notas de estudio sobre los conceptos de programación practicados en cada fase. 
 
 **`.lower()` y `.strip()`:** `.lower()` normaliza mayúsculas/minúsculas para comparar texto sin que "Chao" y "chao" se traten distinto. `.strip()` quita espacios sobrantes al inicio y final, para que " chao " también sea reconocido.
 
+**Validar la entrada al inicio del bucle:** un texto vacío (o de solo espacios) es "falso" en Python una vez se le quitan los espacios, así que `if not input_text.strip(): continue` lo descarta antes de que llegue a Ollama o a la base de datos. Sin esto, cada Enter sin texto se guardaba como mensaje y contaminaba el historial que se carga al arrancar.
+
 **Fuzzy matching (`rapidfuzz`):** compara qué tan parecidas son dos cadenas de texto y devuelve un puntaje (0 a 100). Sirve para tolerar errores de tecleo, pero solo tiene sentido comparando palabras sueltas contra palabras sueltas (como nombres de apps); comparar una palabra contra una frase larga casi nunca da un puntaje alto, aunque el texto tenga sentido para una persona.
 
 ## Fase 2 — Memoria persistente con PostgreSQL
@@ -175,6 +177,8 @@ Cubre la autenticación, la búsqueda, la lectura de cada correo, el manejo de e
 
 **`from correo import obtener_correos`:** importa solo la función. Con `import correo`, la variable `correo` de un `for` taparía al módulo.
 
+**Una clave por nombre, no una tupla:** para que "abre mis correos" abra Gmail hizo falta una clave nueva (`"correo"`) apuntando a la misma dirección que `"gmail"`. El fuzzy matching compara cada palabra de la frase con las claves de `todo`, y "correos" no se parece a "gmail". Dos claves distintas pueden tener el mismo valor. Escribir `("gmail", "correo"): url` no sirve: una tupla es **una sola** clave, y la búsqueda compara contra texto, así que nunca la encontraría (y no da error, solo responde "No reconozco ese camino").
+
 **Límite de las palabras clave:** "entonces lee una hermosa mañana correo" también activa la lectura, porque tiene una palabra de cada conjunto. Hacerlo más estricto con más reglas sería código que se descarta en la Fase 3.5, cuando Ollama clasifique la intención con JSON. Se dejó como comportamiento conocido.
 
 **Diagnóstico vs lo que dice Zoltrak:** los `print` de `correo.py` son mensajes técnicos para quien desarrolla (qué falló y por qué); el mensaje de `main.py` es lo que Zoltrak le dice al usuario, con su personalidad. Mientras todo sea consola conviven bien; con la voz habrá que separarlos.
@@ -242,5 +246,11 @@ Cubre la autenticación, la búsqueda, la lectura de cada correo, el manejo de e
 **Qué ejecutar y desde dónde:** `pip freeze > ../requirements.txt` sobrescribe el archivo completo con lo instalado en el entorno virtual; el `..` sube una carpeta desde `brain/` hasta la raíz. Se usa CMD y no PowerShell, porque `>` en PowerShell guarda en UTF-16 y `pip install -r` falla después.
 
 **Un arreglo ajeno a la tarea en curso va en su propia rama:** si mientras se trabaja en una funcionalidad aparece un problema que no tiene relación (por ejemplo, entradas vacías que se guardan en la base de datos), se anota, se termina la tarea actual y el arreglo sale de `main` en una rama `fix/nombre-corto`. Mezclarlo ensucia el PR y, con el squash, todo quedaría en un solo commit con un título que describe solo una de las dos cosas. Si dos ramas van a tocar el mismo archivo, conviene cerrar una antes de abrir la otra, para evitar conflictos.
+
+**Nada se commitea directo en `main`:** `main` solo recibe cambios por Pull Request. Hasta un cambio de una línea sale de una rama.
+
+**La documentación de una tarea viaja en el PR de esa tarea:** si el cambio dice "esto ya funciona" o "esto ya se corrigió", va con el código que lo hizo. La documentación atrasada de varias tareas, o las decisiones nuevas, van en su propia rama `docs/...`, abierta desde `main` ya actualizado para no chocar con otras ramas que toquen el mismo archivo.
+
+**`git branch -d` vs `-D` después de un squash:** el squash reescribe los commits de la rama en uno nuevo, así que Git no los reconoce como mergeados y `-d` se queja. Si el PR ya está mergeado y el contenido está en `main`, `-D` es seguro; sin esa verificación, no.
 
 **Git Flow (no se usa en este proyecto):** convención más formal de ramas (`main`, `develop`, `feature/*`, `release/*`, `hotfix/*`) y etiquetas de versión (`v1.0.0`, etc.), pensada para proyectos con varios colaboradores o releases formales que sí necesitan separar "lo estable" de "lo que viene". Vale la pena conocerlo porque es lo que se usa en equipos de trabajo reales y en otros proyectos (ej. el de la U con GitFlow).
