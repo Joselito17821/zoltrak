@@ -9,7 +9,7 @@ from correo import obtener_correos
 PALABRAS_CORREO = {"correo", "correos", "gmail", "mail", "mails"}
 PALABRAS_LEER = {"léeme", "leeme", "lee", "resúmeme", "resumeme", "resume",
                  "infórmame", "informame", "revisa", "dime", "tengo", "llegaron"}
-PALABRAS_EJECUTAR = {"ejecutar", "haz esto", "haz aquello", "realiza esto", "realiza aquello", "abre", "abir"}
+PALABRAS_EJECUTAR = {"ejecutar", "haz esto", "haz aquello", "realiza esto", "realiza aquello", "abre", "abrir"}
 CLAVES_SALIR = {"salir", "adios", "chao", "bye", "hasta luego", "nos vemos", "adiós"}
 
 # Se traduce el rol de los mensajes guardados en la base de datos a los roles que usa Ollama
