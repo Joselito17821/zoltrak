@@ -7,6 +7,8 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from google.auth.exceptions import RefreshError, TransportError
+from googleapiclient.errors import HttpError
+from httplib2 import ServerNotFoundError
 
 # 2. CONSTANTES
 #    - SCOPES: lista con el permiso gmail.readonly
@@ -108,18 +110,29 @@ def leer_correo(servicio, id_correo):
 
 # 6. FUNCIÓN obtener_correos(cantidad=5, dias=None, remitente=None)
 def obtener_correos(cantidad=5, dias=None, remitente=None):
-    """Devuelve una lista de correos (cada uno es un diccionario), o None si falla el login."""
+    """Devuelve una lista de correos (cada uno es un diccionario).
+
+    Devuelve None si falla el login o la consulta a Gmail, y una lista
+    vacía si no hay correos que cumplan los filtros.
+    """
     # 6.1 Obtener el servicio de Gmail; si es None (login fallido), devolver None
     servicio = obtener_servicio_gmail()
     if servicio is None:
         return None
-    # 6.2 Buscar los id de los correos con los filtros recibidos
-    ids = buscar_ids(servicio, cantidad=cantidad, dias=dias, remitente=remitente)
-    # 6.3 Leer cada correo y guardarlo en una lista
-    lista_correos = []
-    for id_correo in ids:
-        correo = leer_correo(servicio, id_correo)
-        lista_correos.append(correo)
+    try:
+        # 6.2 Buscar los id de los correos con los filtros recibidos
+        ids = buscar_ids(servicio, cantidad=cantidad, dias=dias, remitente=remitente)
+        # 6.3 Leer cada correo y guardarlo en una lista
+        lista_correos = []
+        for id_correo in ids:
+            correo = leer_correo(servicio, id_correo)
+            lista_correos.append(correo)
+    except HttpError as error:
+        print(f"Error al consultar Gmail: {error}")
+        return None
+    except ServerNotFoundError as error:
+        print(f"Error de conexión al servidor: {error}")
+        return None
     # 6.4 Devolver la lista
     return lista_correos
 
@@ -127,5 +140,8 @@ def obtener_correos(cantidad=5, dias=None, remitente=None):
 #PRUEBA MANUAL (solo corre al ejecutar este archivo directamente)
 if __name__ == "__main__":
     correos = obtener_correos(cantidad=3)
-    for correo in correos:
-        print(correo['asunto'])
+    if correos is None:
+        print("No se pudieron obtener los correos")
+    else:
+        for correo in correos:
+            print(correo['asunto'])
