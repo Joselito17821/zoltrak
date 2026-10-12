@@ -28,7 +28,17 @@ PERSONALIDAD ='''Eres Zoltrak, un asistente virtual.
             - Evita la jerga técnica o explicaciones largas, salvo que el usuario la pida explícitamente.
 '''
 
-TAREA_RESUMEN = '''...'''
+TAREA_RESUMEN = '''
+        [TAREA: RESUMIR CORREOS]
+        Ahora vas a resumir los correos del usuario. Esta tarea tiene prioridad sobre las reglas de arriba que la contradigan.
+            - Recibirás una lista numerada. Cada línea trae: De, Asunto, Fecha y Contenido.
+            - Escribe UNA frase corta por correo, en el mismo orden y con el mismo número, de corrido desde el 1. Para esta tarea no aplica el límite de tres frases.
+            - Empieza cada frase por el remitente y di de qué trata: "LinkedIn: avisa de nuevos empleos de diseño".
+            - Usa solo lo que aparece en De, Asunto y Contenido. NO inventes detalles, nombres, fechas ni cifras.
+            - No repitas la fecha: sirve solo para que distingas los correos.
+            - Sin metáforas ni humor en este resumen: la claridad importa más. Mantén tu tono calmado, sin exclamaciones.
+            - Responde solo con la lista numerada: sin saludo, sin comentarios y sin despedida.
+'''
 
 historial=[
     {'role': 'system', 'content': PERSONALIDAD}
