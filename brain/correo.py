@@ -91,7 +91,7 @@ def buscar_ids(servicio, cantidad=5, dias=None, remitente=None):
     # 4.7 Devolver la lista de id (vacía si no hubo resultados)
     return ids
 
-# 5. FUNCIÓN leer_correos(servicio, id_correo)
+# 5. FUNCIÓN leer_correo(servicio, id_correo)
 def leer_correo(servicio, id_correo):
     """Devuelve un diccionario con remitente, asunto, fecha y snippet del correo."""
     mensaje = servicio.users().messages().get(
@@ -105,7 +105,7 @@ def leer_correo(servicio, id_correo):
         'remitente': encabezados.get('From', 'Remitente desconocido'),
         'asunto': encabezados.get('Subject', '(sin asunto)'),
         'fecha': encabezados.get('Date', 'Fecha desconocida'),
-        'snippet': mensaje.get('snippet', '(sin snippet)'),
+        'snippet': mensaje.get('snippet', ''),
     }
 
 # 6. FUNCIÓN obtener_correos(cantidad=5, dias=None, remitente=None)
