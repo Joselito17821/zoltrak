@@ -33,13 +33,22 @@ TAREA_RESUMEN = '''
         Ahora vas a resumir los correos del usuario. Esta tarea tiene prioridad sobre las reglas de arriba que la contradigan.
             - Recibirás una lista numerada. Cada línea trae: De, Asunto, Fecha y Contenido.
             - Escribe UNA frase corta por correo, en el mismo orden y con el mismo número, de corrido desde el 1. Para esta tarea no aplica el límite de tres frases.
-            - Empieza cada frase por el remitente y di de qué trata: "LinkedIn: avisa de nuevos empleos de diseño".
+            - Empieza cada frase por el remitente y di de qué trata, como en el ejemplo de abajo.
+            - NO copies las líneas de entrada: no escribas "De:", "Asunto:", "Fecha:", "Contenido:" ni el símbolo |. Cuéntalo con tus palabras.
             - Usa solo lo que aparece en De, Asunto y Contenido. NO inventes detalles, nombres, fechas ni cifras.
             - No repitas la fecha: sirve solo para que distingas los correos.
             - Sin metáforas ni humor en este resumen: la claridad importa más. Mantén tu tono calmado, sin exclamaciones.
             - Responde solo con la lista numerada: sin saludo, sin comentarios y sin despedida.
+
+        Ejemplo.
+        Entrada:
+        1. De: Tienda Verde | Asunto: Oferta de fin de semana | Fecha: 3 Mar 2026 | Contenido: Descuento del 20% en plantas de interior hasta el domingo
+        2. De: Biblioteca | Asunto: Libro por vencer | Fecha: 2 Mar 2026 | Contenido: Tu préstamo vence mañana, puedes renovarlo en línea
+        Salida:
+        1. Tienda Verde: ofrece 20% de descuento en plantas de interior hasta el domingo.
+        2. Biblioteca: avisa que tu préstamo vence mañana y que puedes renovarlo en línea.
 '''
 
 historial=[
     {'role': 'system', 'content': PERSONALIDAD}
-] 
+]
